@@ -1,96 +1,173 @@
-# MCP Orchestration Hub
+# 🔗 MCP Orchestration Hub
 
-A powerful visual workflow builder for chaining MCP (Model Context Protocol) servers into automated workflows.
+[![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9.3-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19.2.4-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1.18-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-2.93.3-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-## Features
+> 🚀 **Visual workflow builder for chaining MCP (Model Context Protocol) servers into automated, intelligent workflows**
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/yksanjo/mcp-orchestration-hub/main/public/screenshot.png" alt="MCP Orchestration Hub Screenshot" width="800">
+</p>
+
+---
+
+## ✨ Features
 
 ### 🧩 Visual Workflow Builder
-- Drag-and-drop interface powered by ReactFlow
-- Multiple node types: MCP Servers, Triggers, Conditions, Outputs
-- Connect nodes with data mapping between outputs and inputs
-- Configure error handling strategies (fail, retry, skip, continue)
+- **Drag-and-Drop Interface** powered by ReactFlow
+- **Multiple Node Types**: MCP Servers, Triggers, Conditions, Outputs
+- **Data Mapping**: Connect nodes with visual data flow between outputs and inputs
+- **Error Handling**: Configure strategies (fail, retry, skip, continue) per node
+- **Real-time Validation**: Visual feedback on connections and configurations
 
 ### 🔌 MCP Server Integration
-- Browse and search MCP servers from the discovery registry
-- Auto-configure node inputs/outputs based on server capabilities
-- Cost tracking per MCP call
-- Real-time availability status
+- **Discovery Registry**: Browse and search MCP servers from the central registry
+- **Auto-Configuration**: Node inputs/outputs automatically mapped from server capabilities
+- **Cost Tracking**: Monitor per-call costs and total workflow spend
+- **Health Monitoring**: Real-time server availability status
 
 ### ⚡ Workflow Execution Engine
-- Execute workflows with real-time monitoring
-- Parallel and sequential execution modes
-- Automatic retry with exponential backoff
-- Cost limits and timeout protection
+- **Async Execution**: High-performance workflow runner with queue support
+- **Parallel & Sequential**: Choose execution modes per workflow
+- **Retry Logic**: Automatic exponential backoff for failed nodes
+- **Cost Protection**: Set max cost limits and timeouts
+- **State Management**: Track execution progress in real-time
 
 ### 📊 Real-time Monitoring Dashboard
-- Live execution status updates
-- Detailed execution timeline with node-level visibility
-- Input/output data inspection
-- Error tracking and debugging
-- Performance metrics and cost analysis
+- **Live Execution View**: Watch workflows run in real-time
+- **Node-Level Detail**: Inspect inputs, outputs, and errors per node
+- **Timeline Visualization**: See execution flow and timing
+- **Performance Metrics**: Duration, cost, and success rate analytics
+- **Error Debugging**: Full stack traces and error context
 
 ### 🏪 Template Marketplace
-- Browse community-contributed workflow templates
-- Free and paid templates with revenue sharing
-- Install templates with one click
-- Rate and review templates
-- Submit your own templates
+- **Community Templates**: Browse pre-built workflow templates
+- **Revenue Sharing**: 70/30 split for template creators
+- **One-Click Install**: Import and customize templates instantly
+- **Rating System**: Community-driven quality ratings
+- **Categories**: AI, Automation, Analytics, Communication, and more
 
-## Tech Stack
+---
 
-- **Framework**: Next.js 16 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Database**: Supabase (PostgreSQL + Auth + Realtime)
-- **Workflow Engine**: Custom execution engine with ReactFlow
-- **Payment**: Stripe (for template marketplace)
+## 🛠️ Tech Stack
 
-## Getting Started
+| Category | Technology |
+|----------|------------|
+| **Framework** | Next.js 16 (App Router) |
+| **Language** | TypeScript 5.9 |
+| **Styling** | Tailwind CSS 4.1 |
+| **UI Components** | React 19, Lucide Icons |
+| **Database** | Supabase (PostgreSQL) |
+| **Auth** | Supabase Auth |
+| **Realtime** | Supabase Realtime |
+| **Workflow Engine** | Custom TypeScript Engine |
+| **Visual Editor** | ReactFlow |
+| **Payments** | Stripe |
+| **Deployment** | Vercel Ready |
+
+---
+
+## 📁 Project Structure
+
+```
+mcp-orchestration-hub/
+├── 📂 app/                        # Next.js App Router
+│   ├── 📂 (dashboard)/           # Dashboard routes (grouped)
+│   │   ├── 📄 page.tsx           # Dashboard home
+│   │   ├── 📄 layout.tsx         # Dashboard layout with nav
+│   │   ├── 📂 workflows/         # Workflow CRUD pages
+│   │   │   ├── 📄 page.tsx       # Workflow list
+│   │   │   ├── 📄 new/page.tsx   # Create workflow
+│   │   │   └── 📂 [id]/          # Single workflow
+│   │   │       ├── 📄 page.tsx   # Redirect to edit
+│   │   │       └── 📂 edit/      # Workflow editor
+│   │   ├── 📂 monitoring/        # Execution monitoring
+│   │   │   ├── 📄 page.tsx       # Monitoring dashboard
+│   │   │   └── 📄 ExecutionList.tsx
+│   │   └── 📂 marketplace/       # Template marketplace
+│   │       └── 📄 page.tsx       # Browse templates
+│   └── 📂 api/                   # API routes
+│       ├── 📂 workflows/         # Workflow CRUD endpoints
+│       ├── 📂 executions/        # Execution management
+│       ├── 📂 templates/         # Template marketplace API
+│       └── 📂 mcp/               # MCP discovery endpoints
+├── 📂 components/                # React components
+│   ├── 📂 workflow-builder/      # ReactFlow node components
+│   │   ├── 📄 WorkflowCanvas.tsx # Main canvas
+│   │   ├── 📄 MCPServerNode.tsx  # MCP server node
+│   │   ├── 📄 TriggerNode.tsx    # Trigger node
+│   │   ├── 📄 ConditionNode.tsx  # Condition node
+│   │   ├── 📄 OutputNode.tsx     # Output node
+│   │   ├── 📄 NodePalette.tsx    # Draggable palette
+│   │   └── 📄 NodeConfigPanel.tsx# Configuration sidebar
+│   ├── 📂 monitoring/            # Monitoring components
+│   │   ├── 📄 RealtimeExecutions.tsx
+│   │   ├── 📄 ExecutionTimeline.tsx
+│   │   ├── 📄 ExecutionStatusBadge.tsx
+│   │   └── 📄 StatsCards.tsx
+│   └── 📂 marketplace/           # Marketplace components
+│       ├── 📄 TemplateCard.tsx
+│       └── 📄 TemplateFilters.tsx
+├── 📂 lib/                       # Utility functions
+│   ├── 📂 supabase/              # Supabase clients
+│   │   ├── 📄 client.ts          # Browser client
+│   │   ├── 📄 server.ts          # Server client
+│   │   └── 📄 middleware.ts      # Auth middleware
+│   ├── 📄 mcp-discovery.ts       # MCP Discovery API client
+│   ├── 📄 workflow-execution.ts  # Execution engine
+│   └── 📄 utils.ts               # Helper functions
+├── 📂 types/                     # TypeScript types
+│   └── 📄 index.ts               # Global type definitions
+└── 📄 package.json               # Dependencies
+```
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- Supabase account
+- Node.js 18+ 
+- Supabase account (free tier works)
 - Stripe account (for marketplace features)
 
 ### Installation
 
-1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/mcp-orchestration-hub.git
+# 1. Clone the repository
+git clone https://github.com/yksanjo/mcp-orchestration-hub.git
 cd mcp-orchestration-hub
-```
 
-2. Install dependencies:
-```bash
+# 2. Install dependencies
 npm install
-```
 
-3. Set up environment variables:
-```bash
+# 3. Set up environment variables
 cp .env.example .env.local
-```
 
-4. Configure your environment variables:
-```
+# 4. Configure your .env.local:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 MCP_DISCOVERY_API=https://mcp-discovery-two.vercel.app
-```
 
-5. Run the development server:
-```bash
+# 5. Run the development server
 npm run dev
-```
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+# 6. Open http://localhost:3000
+```
 
 ### Database Setup
 
-Run the following SQL in your Supabase SQL editor to create the required tables:
+Run this SQL in your Supabase SQL Editor:
+
+<details>
+<summary>📜 Click to expand SQL schema</summary>
 
 ```sql
 -- Workflows table
@@ -112,7 +189,7 @@ CREATE TABLE workflows (
   UNIQUE(user_id, slug)
 );
 
--- Workflow executions table
+-- Workflow executions
 CREATE TABLE workflow_executions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workflow_id UUID REFERENCES workflows(id) ON DELETE CASCADE,
@@ -130,7 +207,7 @@ CREATE TABLE workflow_executions (
   failed_nodes TEXT[]
 );
 
--- Node executions table
+-- Node executions
 CREATE TABLE node_executions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   execution_id UUID REFERENCES workflow_executions(id) ON DELETE CASCADE,
@@ -147,7 +224,7 @@ CREATE TABLE node_executions (
   retry_count INTEGER DEFAULT 0
 );
 
--- Templates table
+-- Templates
 CREATE TABLE templates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workflow_id UUID REFERENCES workflows(id) ON DELETE CASCADE,
@@ -168,7 +245,7 @@ CREATE TABLE templates (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Template installs table
+-- Template installs
 CREATE TABLE template_installs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   template_id UUID REFERENCES templates(id) ON DELETE CASCADE,
@@ -179,7 +256,7 @@ CREATE TABLE template_installs (
   UNIQUE(template_id, user_id)
 );
 
--- Template reviews table
+-- Template reviews
 CREATE TABLE template_reviews (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   template_id UUID REFERENCES templates(id) ON DELETE CASCADE,
@@ -191,7 +268,7 @@ CREATE TABLE template_reviews (
   UNIQUE(template_id, user_id)
 );
 
--- Profiles table (extends auth.users)
+-- Profiles
 CREATE TABLE profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
@@ -206,7 +283,7 @@ CREATE TABLE profiles (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Enable RLS
+-- Enable RLS and policies
 ALTER TABLE workflows ENABLE ROW LEVEL SECURITY;
 ALTER TABLE workflow_executions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE node_executions ENABLE ROW LEVEL SECURITY;
@@ -222,101 +299,129 @@ CREATE POLICY "Users can manage own workflows"
 CREATE POLICY "Users can view own executions"
   ON workflow_executions FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can view own node executions"
-  ON node_executions FOR SELECT
-  USING (EXISTS (
-    SELECT 1 FROM workflow_executions we
-    WHERE we.id = node_executions.execution_id
-    AND we.user_id = auth.uid()
-  ));
-
 CREATE POLICY "Anyone can view approved templates"
   ON templates FOR SELECT USING (status = 'approved');
 
-CREATE POLICY "Authors can manage own templates"
-  ON templates FOR ALL USING (auth.uid() = author_id);
-
-CREATE POLICY "Users can view own installs"
-  ON template_installs FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can create own installs"
-  ON template_installs FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can manage own reviews"
-  ON template_reviews FOR ALL USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can view own profile"
-  ON profiles FOR SELECT USING (auth.uid() = id);
-
-CREATE POLICY "Users can update own profile"
-  ON profiles FOR UPDATE USING (auth.uid() = id);
-
--- Realtime subscriptions
 ALTER PUBLICATION supabase_realtime ADD TABLE workflow_executions;
 ```
+</details>
 
-## Project Structure
+---
 
-```
-mcp-orchestration-hub/
-├── app/                        # Next.js App Router
-│   ├── (dashboard)/           # Dashboard routes
-│   │   ├── page.tsx           # Dashboard home
-│   │   ├── layout.tsx         # Dashboard layout
-│   │   ├── workflows/         # Workflow management
-│   │   ├── monitoring/        # Execution monitoring
-│   │   └── marketplace/       # Template marketplace
-│   └── api/                   # API routes
-│       ├── workflows/         # Workflow CRUD
-│       ├── executions/        # Execution management
-│       ├── templates/         # Template marketplace
-│       └── mcp/               # MCP discovery
-├── components/                # React components
-│   ├── workflow-builder/      # ReactFlow components
-│   ├── monitoring/            # Monitoring components
-│   └── marketplace/           # Marketplace components
-├── lib/                       # Utility functions
-│   ├── supabase/              # Supabase clients
-│   ├── mcp-discovery.ts       # MCP Discovery client
-│   ├── workflow-execution.ts  # Execution engine
-│   └── utils.ts               # Helper functions
-├── types/                     # TypeScript types
-└── public/                    # Static assets
-```
-
-## Usage
+## 💡 Usage
 
 ### Creating a Workflow
 
-1. Click "New Workflow" or go to `/workflows/new`
-2. Drag nodes from the palette onto the canvas
-3. Connect nodes by dragging from output handles to input handles
-4. Configure each node by clicking on it
+1. Click **"New Workflow"** or go to `/workflows/new`
+2. Drag nodes from the palette onto the canvas:
+   - 🎬 **Trigger**: Manual, Scheduled, or Webhook
+   - 🔌 **MCP Server**: Connect to any MCP server
+   - 🔀 **Condition**: Branch logic based on data
+   - 📤 **Output**: Return, Webhook, or Store results
+3. Connect nodes by dragging from output to input handles
+4. Configure each node (click to open config panel)
 5. Save and activate your workflow
 
 ### Running a Workflow
 
-1. Go to your workflow's detail page
-2. Click "Run" to execute manually
-3. Or configure a trigger (schedule/webhook) for automatic execution
-4. Monitor execution in real-time on the Monitoring page
+```typescript
+// Execute via API
+const response = await fetch('/api/workflows/{id}/execute', {
+  method: 'POST',
+  body: JSON.stringify({ input: { message: 'Hello' } })
+});
 
-### Using Templates
+const result = await response.json();
+```
 
-1. Browse the Template Marketplace at `/marketplace`
+Or use the **Run** button in the UI for manual execution.
+
+### Installing Templates
+
+1. Visit `/marketplace`
 2. Filter by category, price, or search
 3. Click on a template to view details
-4. Click "Install" to add it to your workflows
+4. Click **"Install"** to add to your workflows
 5. Customize and activate
 
-## License
+---
 
-MIT License - see LICENSE file for details.
+## 🔌 MCP Server Integration
 
-## Contributing
+The platform integrates with the [MCP Discovery Registry](https://mcp-discovery-two.vercel.app) to find and use MCP servers:
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+```typescript
+// Example: Using an MCP server in a workflow node
+{
+  type: 'mcpServer',
+  data: {
+    mcpServer: {
+      slug: 'openai-chat',
+      name: 'OpenAI Chat',
+      cost_per_call_cents: 1
+    },
+    inputs: [
+      { name: 'prompt', source: '$input.message' }
+    ],
+    onError: 'retry',
+    maxRetries: 3
+  }
+}
+```
 
-## Support
+---
 
-For support, email support@mcporchestration.hub or join our Discord community.
+## 📸 Screenshots
+
+| Workflow Builder | Monitoring Dashboard | Marketplace |
+|------------------|---------------------|-------------|
+| ![Builder](docs/screenshots/builder.png) | ![Monitoring](docs/screenshots/monitoring.png) | ![Marketplace](docs/screenshots/marketplace.png) |
+
+---
+
+## 🛣️ Roadmap
+
+- [x] Visual workflow builder
+- [x] MCP server integration
+- [x] Workflow execution engine
+- [x] Real-time monitoring
+- [x] Template marketplace
+- [ ] Webhook triggers
+- [ ] Scheduled workflows (cron)
+- [ ] Multi-environment deployments
+- [ ] Workflow versioning
+- [ ] Team collaboration
+- [ ] Advanced analytics
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [ReactFlow](https://reactflow.dev/) - Visual workflow editor
+- [Supabase](https://supabase.com/) - Backend infrastructure
+- [MCP](https://modelcontextprotocol.io/) - Model Context Protocol
+- [Next.js](https://nextjs.org/) - React framework
+
+---
+
+<p align="center">
+  Built with ❤️ by <a href="https://github.com/yksanjo">@yksanjo</a>
+</p>
