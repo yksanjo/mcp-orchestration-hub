@@ -1,5 +1,12 @@
 # mcp-orchestration-hub
 
+Production-grade project scaffold focused on reliability, maintainability, and fast onboarding.
+
+[![CI](https://img.shields.io/github/actions/workflow/status/yksanjo/mcp-orchestration-hub/ci.yml?branch=main&label=ci)](https://github.com/yksanjo/mcp-orchestration-hub/actions)
+![License](https://img.shields.io/github/license/yksanjo/mcp-orchestration-hub)
+![Last Commit](https://img.shields.io/github/last-commit/yksanjo/mcp-orchestration-hub)
+![Repo Size](https://img.shields.io/github/repo-size/yksanjo/mcp-orchestration-hub)
+
 ## Detailed Description
 
 mcp-orchestration-hub is maintained as an industry-grade software project with production-ready engineering practices.  
