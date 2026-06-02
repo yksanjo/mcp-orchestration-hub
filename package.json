@@ -10,8 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
-    "@stripe/stripe-js": "^8.7.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.93.3",
     "@tailwindcss/postcss": "^4.1.18",
@@ -24,12 +22,8 @@
     "postcss": "^8.5.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-hook-form": "^7.71.1",
     "reactflow": "^11.11.4",
-    "recharts": "^3.7.0",
-    "stripe": "^20.3.0",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3",
-    "zod": "^4.3.6"
+    "typescript": "^5.9.3"
   }
 }

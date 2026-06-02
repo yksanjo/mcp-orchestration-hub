@@ -132,41 +132,23 @@ export default function WorkflowEditPage({
         body: JSON.stringify({ input_data: {} }),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to execute workflow');
+        throw new Error(result.error || 'Failed to execute workflow');
       }
 
-      // Handle SSE stream for real-time updates
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('No response body');
+      // The execute route returns a single JSON result (not an SSE stream).
+      // Update per-node state from the `nodeStatuses` map it includes.
+      const nodeStatuses = result.nodeStatuses as
+        | Record<string, 'completed' | 'failed' | 'skipped'>
+        | undefined;
+      if (nodeStatuses) {
+        setExecutionState(nodeStatuses);
       }
 
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const text = decoder.decode(value);
-        const lines = text.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              if (data.node_id && data.status) {
-                setExecutionState((prev) => ({
-                  ...prev,
-                  [data.node_id]: data.status,
-                }));
-              }
-            } catch {
-              // Ignore parse errors
-            }
-          }
-        }
+      if (!result.success && result.error) {
+        setError(result.error);
       }
     } catch (err) {
       console.error('Execution error:', err);

@@ -22,7 +22,8 @@ export async function POST(
 
   try {
     const body = await request.json();
-    const inputData = body.input || {};
+    // Client sends `{ input_data: {...} }`. Accept `input` too for backward compat.
+    const inputData = body.input_data || body.input || {};
 
     // Get the workflow
     const { data: workflow, error: workflowError } = await supabase
@@ -83,6 +84,7 @@ export async function POST(
       error: result.error,
       durationMs: result.durationMs,
       totalCostCents: result.totalCostCents,
+      nodeStatuses: result.nodeStatuses ?? {},
     });
   } catch (error) {
     console.error('Execute workflow error:', error);
