@@ -10,6 +10,7 @@ import type {
   OutputNodeData,
 } from '@/types';
 import { createClient } from './supabase/server';
+import { safeEvaluateCondition } from './safe-eval';
 
 export type ExecutionStatus = 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
 
@@ -22,12 +23,17 @@ interface ExecutionContext {
   variables: Record<string, unknown>;
 }
 
+type NodeStatus = 'completed' | 'failed' | 'skipped';
+
 interface ExecutionResult {
   success: boolean;
   output?: Record<string, unknown>;
   error?: string;
   durationMs: number;
   totalCostCents: number;
+  // Per-node final status so the client can update node state from the single
+  // JSON response (no SSE stream is emitted by this route).
+  nodeStatuses?: Record<string, NodeStatus>;
 }
 
 export class WorkflowExecutionEngine {
@@ -103,6 +109,7 @@ export class WorkflowExecutionEngine {
         error: result.error,
         durationMs: Date.now() - startTime,
         totalCostCents: result.totalCostCents,
+        nodeStatuses: result.nodeStatuses,
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -121,15 +128,16 @@ export class WorkflowExecutionEngine {
   private async runNodes(
     definition: WorkflowDefinition,
     context: ExecutionContext
-  ): Promise<{ success: boolean; output?: Record<string, unknown>; error?: string; totalCostCents: number }> {
+  ): Promise<{ success: boolean; output?: Record<string, unknown>; error?: string; totalCostCents: number; nodeStatuses: Record<string, NodeStatus> }> {
     const { nodes, edges } = definition;
     let totalCostCents = 0;
+    const nodeStatuses: Record<string, NodeStatus> = {};
 
     // Find trigger nodes (starting points)
     const triggerNodes = nodes.filter((n) => n.type === 'trigger');
-    
+
     if (triggerNodes.length === 0) {
-      return { success: false, error: 'No trigger node found', totalCostCents };
+      return { success: false, error: 'No trigger node found', totalCostCents, nodeStatuses };
     }
 
     // Build adjacency map
@@ -172,10 +180,12 @@ export class WorkflowExecutionEngine {
         const errorStrategy = this.getNodeErrorStrategy(node);
         
         if (errorStrategy === 'fail') {
+          nodeStatuses[nodeId] = 'failed';
           return {
             success: false,
             error: `Node "${node.data.label}" failed: ${nodeResult.error}`,
             totalCostCents,
+            nodeStatuses,
           };
         } else if (errorStrategy === 'retry' && nodeResult.retryCount < this.getMaxRetries(node)) {
           // Retry the node
@@ -183,6 +193,9 @@ export class WorkflowExecutionEngine {
           continue;
         }
         // 'skip' or 'continue' - just mark as failed and continue
+        nodeStatuses[nodeId] = 'failed';
+      } else {
+        nodeStatuses[nodeId] = 'completed';
       }
 
       executedNodes.add(nodeId);
@@ -227,6 +240,7 @@ export class WorkflowExecutionEngine {
       success: true,
       output: finalOutput || Object.fromEntries(context.nodeOutputs),
       totalCostCents,
+      nodeStatuses,
     };
   }
 
@@ -446,20 +460,21 @@ export class WorkflowExecutionEngine {
     context: ExecutionContext
   ): Promise<boolean> {
     const data = node.data as ConditionNodeData;
-    
-    // Simple expression evaluation - in production, use a safe expression evaluator
-    // For now, we'll do a basic comparison
+
     try {
-      // Resolve any variables in the condition
+      // Resolve any variables in the condition to JSON literals first, so the
+      // safe evaluator only ever sees literal values (no identifiers/property
+      // access). e.g. `$node1.output.count > 5` -> `3 > 5`.
       const resolvedCondition = data.condition.replace(/\$\w+(\.\w+)*/g, (match) => {
         const value = this.resolveReference(match, context);
         return JSON.stringify(value);
       });
 
-      // WARNING: In production, use a proper expression parser/evaluator
-      // This is just for demonstration
-      // eslint-disable-next-line no-eval
-      return eval(resolvedCondition);
+      // SECURITY: Previously this called `eval(resolvedCondition)`, which allowed
+      // arbitrary server-side code execution via user-authored conditions. We now
+      // use a tiny, dependency-free safe expression evaluator that only supports
+      // comparison/logical operators and literals (no eval / no Function).
+      return safeEvaluateCondition(resolvedCondition);
     } catch {
       return false;
     }

@@ -13,6 +13,8 @@ Teams need fast, deterministic signals to prioritize work and reduce operational
 
 This project ingests runtime signals, computes a deterministic score, and emits structured results for downstream workflows.
 
+> Note: You can build (drag and drop) and run/test workflows in-app today. One-click **deploy** is not yet available and is on the roadmap (see `docs/ROADMAP.md`).
+
 ## Stack
 
 node
