@@ -2,7 +2,8 @@
 
 ## Purpose
 
-mcp-orchestration-hub evaluates service health and change events to reduce operational risk.
+mcp-orchestration-hub evaluates service health and change events to reduce
+operational risk.
 
 ## Components
 
