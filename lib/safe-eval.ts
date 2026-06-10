@@ -74,9 +74,17 @@ function tokenize(input: string): Token[] {
       continue;
     }
 
-    // numbers (including a leading unary minus when used as a literal sign)
-    if (ch >= '0' && ch <= '9') {
+    // numbers (including a leading unary minus when used as a literal sign;
+    // the grammar has no binary minus, so '-' followed by a digit is always
+    // a sign — JSON.stringify of a resolved variable can produce e.g. "-2")
+    const isNegativeSign =
+      ch === '-' && i + 1 < input.length && input[i + 1] >= '0' && input[i + 1] <= '9';
+    if ((ch >= '0' && ch <= '9') || isNegativeSign) {
       let num = '';
+      if (isNegativeSign) {
+        num = '-';
+        i++;
+      }
       while (i < input.length && /[0-9.]/.test(input[i])) {
         num += input[i];
         i++;
@@ -136,7 +144,13 @@ type Value = number | string | boolean | null;
  */
 class Parser {
   private pos = 0;
-  constructor(private tokens: Token[]) {}
+  private tokens: Token[];
+
+  // No TS parameter property here: keep the file erasable-syntax-only so
+  // Node's strip-only TypeScript mode can run it directly (node --test).
+  constructor(tokens: Token[]) {
+    this.tokens = tokens;
+  }
 
   parse(): Value {
     const result = this.parseOr();
